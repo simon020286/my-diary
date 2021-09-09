@@ -172,7 +172,7 @@ func (vu *ViewUtils) AddUpAndDown(viewName string) error {
 	return nil
 }
 
-func (vu *ViewUtils) SelectedRow(v *gocui.View) string {
+func (vu *ViewUtils) CurrentRowText(v *gocui.View) string {
 	var l string
 	var err error
 	_, cy := v.Cursor()

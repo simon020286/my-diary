@@ -42,6 +42,8 @@ func GetKeyBindings(content *models.Content) []KeyBinding {
 	return []KeyBinding{
 		newKeybinding1("", gocui.KeyCtrlC, quit),
 		newKeybinding1(mainName, gocui.KeyCtrlA, apply(content)),
+		newKeybinding1(mainName, gocui.KeyEnd, toEndLine),
+		newKeybinding1(mainName, gocui.KeyHome, toStartLine),
 		newKeybinding2([]string{menu1Name, menu2Name}, gocui.KeyArrowDown, viewUtils.CursorDown),
 		newKeybinding2([]string{menu1Name, menu2Name}, gocui.KeyArrowUp, viewUtils.CursorUp),
 		newKeybinding2([]string{menu1Name, menu2Name, mainName}, gocui.KeyCtrlS, saveText(content)),

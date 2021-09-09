@@ -24,7 +24,7 @@ var navigationKey []string = []string{menu1Name, menu2Name}
 
 func getLine(content *models.Content) func(g *gocui.Gui, v *gocui.View) error {
 	return func(g *gocui.Gui, v *gocui.View) error {
-		var l string = viewUtils.SelectedRow(v)
+		var l string = viewUtils.CurrentRowText(v)
 		var err error
 
 		sections, ok := content.GetSectionNames(l)
@@ -54,7 +54,7 @@ func getLine(content *models.Content) func(g *gocui.Gui, v *gocui.View) error {
 
 func getContent(content *models.Content) func(g *gocui.Gui, v *gocui.View) error {
 	return func(g *gocui.Gui, v *gocui.View) error {
-		var l string = viewUtils.SelectedRow(v)
+		var l string = viewUtils.CurrentRowText(v)
 		var err error
 
 		section, ok := content.GetSection(currentDate, l)
@@ -125,6 +125,7 @@ func addLine(content *models.Content, options models.AddLineOptions) func(g *goc
 
 			if isNew {
 				fmt.Fprintln(v, text)
+				v.SetCursor(0, len(v.BufferLines())-2)
 			} else {
 				viewUtils.ShowMessage(g, "Item alredy exists!")
 			}
@@ -134,7 +135,7 @@ func addLine(content *models.Content, options models.AddLineOptions) func(g *goc
 
 func removeLine(content *models.Content) func(g *gocui.Gui, v *gocui.View) error {
 	return func(g *gocui.Gui, v *gocui.View) error {
-		var l string = viewUtils.SelectedRow(v)
+		var l string = viewUtils.CurrentRowText(v)
 		return viewUtils.ShowConfirm(g, fmt.Sprintf("Vuoi eliminare %s?\n^Y Yes ^N No", l), func(yesNo bool) {
 			if yesNo {
 				if v.Name() == menu1Name {
@@ -164,6 +165,19 @@ func removeLine(content *models.Content) func(g *gocui.Gui, v *gocui.View) error
 			}
 		})
 	}
+}
+
+func toEndLine(g *gocui.Gui, v *gocui.View) error {
+	l := viewUtils.CurrentRowText(v)
+	_, y := v.Cursor()
+	v.SetCursor(len(l), y)
+	return nil
+}
+
+func toStartLine(g *gocui.Gui, v *gocui.View) error {
+	_, y := v.Cursor()
+	v.SetCursor(0, y)
+	return nil
 }
 
 func keybindings(g *gocui.Gui, content *models.Content) error {
